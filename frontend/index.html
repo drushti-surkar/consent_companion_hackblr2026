@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Consent Companion</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #080b12;
+      --surface: #0f1420;
+      --surface2: #161c2e;
+      --surface3: #1d2540;
+      --border: #232d4a;
+      --border2: #2a3558;
+      --green: #00e07a;
+      --green-dim: #00a857;
+      --green-glow: rgba(0,224,122,0.15);
+      --red: #ff4f4f;
+      --red-dim: rgba(255,79,79,0.12);
+      --amber: #ffb830;
+      --amber-dim: rgba(255,184,48,0.12);
+      --blue: #4f9eff;
+      --text: #e8eaf6;
+      --muted: #6b7499;
+      --muted2: #4a5278;
+      --radius: 16px;
+      --radius-sm: 10px;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 16px 80px;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      width: 100%;
+      max-width: 680px;
+      text-align: center;
+      padding: 56px 0 40px;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0,224,122,0.08);
+      border: 1px solid rgba(0,224,122,0.2);
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--green);
+      margin-bottom: 20px;
+      letter-spacing: 0.02em;
+    }
+    .hero h1 {
+      font-size: clamp(28px, 5vw, 42px);
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1.15;
+      background: linear-gradient(135deg, #fff 40%, var(--green));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 14px;
+    }
+    .hero p {
+      font-size: 16px;
+      color: var(--muted);
+      line-height: 1.65;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .hero-langs {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    .lang-pill {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* ── CONTAINER ── */
+    .container { width: 100%; max-width: 680px; }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .card-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted2);
+      margin-bottom: 16px;
+    }
+
+    /* ── DROP ZONE ── */
+    #drop-zone {
+      border: 2px dashed var(--border2);
+      border-radius: var(--radius-sm);
+      padding: 44px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: var(--surface2);
+    }
+    #drop-zone:hover, #drop-zone.drag-over {
+      border-color: var(--green);
+      background: var(--green-glow);
+    }
+    #drop-zone.has-file {
+      border-color: var(--green);
+      border-style: solid;
+      background: rgba(0,224,122,0.05);
+    }
+    .drop-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--surface3);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      font-size: 22px;
+    }
+    #drop-text-main { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    #drop-text-sub { font-size: 13px; color: var(--muted); }
+    #file-input { display: none; }
+
+    /* ── BUTTON ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    .btn-primary {
+      background: var(--green);
+      color: #000;
+      width: 100%;
+      padding: 14px;
+      font-size: 15px;
+      margin-top: 16px;
+      box-shadow: 0 0 24px rgba(0,224,122,0.2);
+    }
+    .btn-primary:hover:not(:disabled) { background: #00f087; box-shadow: 0 0 32px rgba(0,224,122,0.35); }
+    .btn-ghost {
+      background: var(--surface2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .btn-ghost:hover { background: var(--surface3); }
+
+    /* ── PROGRESS ── */
+    #progress-section { display: none; }
+    .steps-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+    .step-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      color: var(--muted);
+      transition: color 0.3s;
+    }
+    .step-item.active { color: var(--text); }
+    .step-item.done { color: var(--green); }
+    .step-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--border2);
+      flex-shrink: 0;
+      transition: background 0.3s;
+    }
+    .step-item.active .step-dot { background: var(--amber); box-shadow: 0 0 8px var(--amber); }
+    .step-item.done .step-dot { background: var(--green); }
+    .progress-bar { height: 3px; background: var(--surface3); border-radius: 3px; overflow: hidden; margin-top: 4px; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--green-dim), var(--green)); border-radius: 3px; transition: width 0.5s ease; width: 0%; }
+
+    /* ── RESULTS ── */
+    #results-section { display: none; }
+
+    /* ── VOICE CARD ── */
+    .voice-card {
+      background: linear-gradient(135deg, #0a1628 0%, #0d1f1a 100%);
+      border: 1px solid rgba(0,224,122,0.2);
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      text-align: center;
+      margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .voice-card::after {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(0,224,122,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .voice-card h2 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .voice-card p {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    /* ── CALL BUTTON ── */
+    #call-btn {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: none;
+      background: var(--green);
+      color: #000;
+      font-size: 30px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      box-shadow: 0 0 0 0 rgba(0,224,122,0.4);
+      transition: all 0.2s;
+      position: relative;
+    }
+    #call-btn:hover { transform: scale(1.06); }
+    #call-btn.active {
+      background: var(--red);
+      box-shadow: 0 0 0 0 rgba(255,79,79,0.4);
+      animation: pulse-red 1.8s infinite;
+    }
+    #call-btn.connecting {
+      background: var(--amber);
+      animation: pulse-amber 1s infinite;
+    }
+    @keyframes pulse-red {
+      0% { box-shadow: 0 0 0 0 rgba(255,79,79,0.5); }
+      70% { box-shadow: 0 0 0 18px rgba(255,79,79,0); }
+      100% { box-shadow: 0 0 0 0 rgba(255,79,79,0); }
+    }
+    @keyframes pulse-amber {
+      0%, 100% { opacity: 1; } 50% { opacity: 0.6; }
+    }
+    #call-label { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+    #call-status {
+      font-size: 12px;
+      color: var(--green);
+      min-height: 16px;
+      font-weight: 500;
+    }
+
+    /* ── TRANSCRIPT ── */
+    #transcript-box {
+      display: none;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      margin-top: 16px;
+      text-align: left;
+      max-height: 180px;
+      overflow-y: auto;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+    .transcript-line { margin-bottom: 6px; }
+    .transcript-line .who { font-weight: 600; margin-right: 6px; }
+    .transcript-line.user .who { color: var(--blue); }
+    .transcript-line.bot .who { color: var(--green); }
+
+    /* ── CLAUSE GRID ── */
+    .clause-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .clause-chip {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      transition: border-color 0.2s;
+    }
+    .clause-chip:hover { border-color: var(--border2); }
+    .clause-chip .count { font-size: 26px; font-weight: 700; color: var(--text); line-height: 1; }
+    .clause-chip .label { font-size: 11px; color: var(--muted); margin-top: 4px; text-transform: capitalize; font-weight: 500; }
+
+    /* ── RISK FLAGS ── */
+    .risk-card {
+      background: var(--red-dim);
+      border: 1px solid rgba(255,79,79,0.25);
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      margin-bottom: 10px;
+    }
+    .risk-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+    .risk-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 20px;
+      background: var(--red);
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .risk-type {
+      font-size: 11px;
+      color: rgba(255,79,79,0.8);
+      text-transform: capitalize;
+      font-weight: 500;
+    }
+    .risk-page { font-size: 11px; color: var(--muted); margin-left: auto; }
+    .risk-text { font-size: 12px; color: rgba(232,234,246,0.65); line-height: 1.65; }
+
+    /* ── DOC INFO BAR ── */
+    .doc-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      margin-bottom: 16px;
+      font-size: 13px;
+    }
+    .doc-bar-icon { font-size: 18px; }
+    .doc-name-text { font-weight: 500; color: var(--text); }
+    .doc-meta { color: var(--muted); font-size: 12px; margin-left: auto; }
+
+    /* ── SECTION TITLE ── */
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted2);
+      margin-bottom: 12px;
+    }
+    .section-title.danger { color: rgba(255,79,79,0.7); }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 20px;
+      font-size: 13px;
+      transition: transform 0.3s ease;
+      z-index: 999;
+      white-space: nowrap;
+    }
+    #toast.show { transform: translateX(-50%) translateY(0); }
+    #toast.error { border-color: var(--red); color: var(--red); }
+
+    /* ── DEMO TIPS ── */
+    .tip-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    .tip-pill {
+      background: var(--surface3);
+      border: 1px solid var(--border2);
+      border-radius: 20px;
+      padding: 5px 12px;
+      font-size: 12px;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .tip-pill:hover { border-color: var(--green); color: var(--green); }
+
+    /* scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+  </style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-badge">
+    <span>●</span> Voice-first · Accessible · Multilingual
+  </div>
+  <h1>Understand any legal document<br>by just asking</h1>
+  <p>Upload a PDF. Start a voice call. Ask questions in your language and get plain answers — no legal knowledge needed.</p>
+  <div class="hero-langs">
+    <span class="lang-pill">English</span>
+    <span class="lang-pill">हिंदी</span>
+    <span class="lang-pill">ಕನ್ನಡ</span>
+    <span class="lang-pill">தமிழ்</span>
+    <span class="lang-pill">తెలుగు</span>
+    <span class="lang-pill">मराठी</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- STEP 1: Upload -->
+  <div class="card" id="upload-card">
+    <div class="card-label">Step 1 — Upload your document</div>
+
+    <div id="drop-zone" onclick="document.getElementById('file-input').click()">
+      <div class="drop-icon">📄</div>
+      <div id="drop-text-main">Drop a PDF here or click to browse</div>
+      <div id="drop-text-sub">Terms of service, loan agreements, consent forms — up to 20 MB</div>
+    </div>
+    <input type="file" id="file-input" accept=".pdf"/>
+
+    <button class="btn btn-primary" id="upload-btn" disabled onclick="uploadFile()">
+      Analyze Document
+    </button>
+  </div>
+
+  <!-- STEP 2: Progress -->
+  <div class="card" id="progress-section">
+    <div class="card-label">Analyzing your document</div>
+    <div class="steps-list" id="steps-list">
+      <div class="step-item" id="s0"><div class="step-dot"></div>Extracting text from PDF</div>
+      <div class="step-item" id="s1"><div class="step-dot"></div>Splitting into clauses</div>
+      <div class="step-item" id="s2"><div class="step-dot"></div>Classifying clause types &amp; risk levels</div>
+      <div class="step-item" id="s3"><div class="step-dot"></div>Generating semantic embeddings</div>
+      <div class="step-item" id="s4"><div class="step-dot"></div>Indexing in Qdrant vector database</div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results-section">
+
+    <!-- Doc info -->
+    <div class="doc-bar">
+      <span class="doc-bar-icon">📋</span>
+      <span class="doc-name-text" id="doc-filename">—</span>
+      <span class="doc-meta" id="doc-chunks-label">— clauses indexed</span>
+    </div>
+
+    <!-- Voice call card -->
+    <div class="voice-card">
+      <h2>Ask questions by voice</h2>
+      <p>Speak in any language — get a plain-language answer in seconds</p>
+
+      <button id="call-btn" onclick="toggleCall()">🎙️</button>
+      <div id="call-label">Tap to start a voice call</div>
+      <div id="call-status"></div>
+
+      <div id="transcript-box"></div>
+
+      <div class="tip-row" id="tip-row">
+        <div class="tip-pill" onclick="suggestQuery(this)">Can they sell my data?</div>
+        <div class="tip-pill" onclick="suggestQuery(this)">What if I miss a payment?</div>
+        <div class="tip-pill" onclick="suggestQuery(this)">Can I cancel anytime?</div>
+        <div class="tip-pill" onclick="suggestQuery(this)">Can I sue them?</div>
+      </div>
+    </div>
+
+    <!-- Clause breakdown -->
+    <div class="card">
+      <div class="section-title">Clauses found by type</div>
+      <div class="clause-grid" id="clause-grid"></div>
+
+      <!-- Risk flags -->
+      <div id="risk-section" style="display:none">
+        <div class="section-title danger" style="margin-top:20px">⚠ High-risk clauses — read before you sign</div>
+        <div id="risk-list"></div>
+      </div>
+
+      <div style="margin-top:20px;display:flex;gap:10px">
+        <button class="btn btn-ghost" onclick="resetToUpload()">Upload another document</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<!-- Vapi Web SDK (locally bundled) -->
+<script src="/vapi.bundle.js"></script>
+
+<script>
+  const BACKEND = window.location.origin;
+  let selectedFile = null;
+  let vapiPhone = "";
+  let vapiPublicKey = "";
+  let vapiAssistantId = "";
+  let currentDocId = null;
+  let vapi = null;
+  let callActive = false;
+
+  // ── Config load ──
+  async function loadConfig() {
+    try {
+      const r = await fetch(BACKEND + "/config");
+      if (r.ok) {
+        const d = await r.json();
+        if (d.phone) vapiPhone = d.phone;
+        if (d.vapi_public_key) vapiPublicKey = d.vapi_public_key;
+        if (d.vapi_assistant_id) vapiAssistantId = d.vapi_assistant_id;
+      }
+    } catch (_) {}
+  }
+  loadConfig();
+
+  // ── Drag & drop ──
+  const dropZone = document.getElementById("drop-zone");
+  const fileInput = document.getElementById("file-input");
+  const uploadBtn = document.getElementById("upload-btn");
+
+  dropZone.addEventListener("dragover", e => { e.preventDefault(); dropZone.classList.add("drag-over"); });
+  dropZone.addEventListener("dragleave", () => dropZone.classList.remove("drag-over"));
+  dropZone.addEventListener("drop", e => {
+    e.preventDefault();
+    dropZone.classList.remove("drag-over");
+    const f = e.dataTransfer.files[0];
+    if (f && f.name.toLowerCase().endsWith(".pdf")) setFile(f);
+    else showToast("Please drop a PDF file.", true);
+  });
+  fileInput.addEventListener("change", () => { if (fileInput.files[0]) setFile(fileInput.files[0]); });
+
+  function setFile(f) {
+    selectedFile = f;
+    uploadBtn.disabled = false;
+    document.getElementById("drop-text-main").textContent = f.name;
+    document.getElementById("drop-text-sub").textContent = (f.size / 1024 / 1024).toFixed(1) + " MB · Ready to analyze";
+    dropZone.classList.add("has-file");
+    document.querySelector(".drop-icon").textContent = "✅";
+  }
+
+  // ── Upload ──
+  const STEP_TIMINGS = [0, 1800, 3600, 5400, 7200];
+  async function uploadFile() {
+    if (!selectedFile) return;
+    uploadBtn.disabled = true;
+
+    document.getElementById("upload-card").style.display = "none";
+    document.getElementById("progress-section").style.display = "block";
+
+    // Animate steps
+    let si = 0;
+    const pcts = [10, 30, 55, 78, 93];
+    STEP_TIMINGS.forEach((t, i) => {
+      setTimeout(() => {
+        if (si > 0) document.getElementById("s"+(si-1)).className = "step-item done";
+        document.getElementById("s"+i).className = "step-item active";
+        document.getElementById("progress-fill").style.width = pcts[i] + "%";
+        si = i + 1;
+      }, t);
+    });
+
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+
+    try {
+      const resp = await fetch(BACKEND + "/ingest", { method: "POST", body: formData });
+      if (!resp.ok) { const e = await resp.json(); throw new Error(e.detail || "Upload failed."); }
+      const data = await resp.json();
+
+      // Mark all done
+      document.getElementById("progress-fill").style.width = "100%";
+      for (let i = 0; i < 5; i++) document.getElementById("s"+i).className = "step-item done";
+      setTimeout(() => showResults(data), 500);
+    } catch (e) {
+      document.getElementById("progress-section").style.display = "none";
+      document.getElementById("upload-card").style.display = "block";
+      uploadBtn.disabled = false;
+      showToast(e.message, true);
+    }
+  }
+
+  // ── Results ──
+  function showResults(data) {
+    document.getElementById("progress-section").style.display = "none";
+    document.getElementById("results-section").style.display = "block";
+    currentDocId = data.doc_id;
+
+    document.getElementById("doc-filename").textContent = data.filename;
+    document.getElementById("doc-chunks-label").textContent = data.total_chunks + " clauses indexed";
+
+    // Clause grid
+    const grid = document.getElementById("clause-grid");
+    grid.innerHTML = "";
+    const labels = { data_rights:"Data Rights", cancellation:"Cancellation", liability:"Liability",
+                     payment:"Payment", termination:"Termination", arbitration:"Arbitration", general:"General" };
+    const counts = data.clause_counts || {};
+    Object.entries(counts).sort((a,b)=>b[1]-a[1]).forEach(([type, count]) => {
+      const el = document.createElement("div");
+      el.className = "clause-chip";
+      el.innerHTML = `<div class="count">${count}</div><div class="label">${labels[type]||type}</div>`;
+      grid.appendChild(el);
+    });
+
+    // Risk flags
+    const risks = data.risk_flags || [];
+    if (risks.length > 0) {
+      document.getElementById("risk-section").style.display = "block";
+      const list = document.getElementById("risk-list");
+      list.innerHTML = "";
+      risks.slice(0,5).forEach(r => {
+        const el = document.createElement("div");
+        el.className = "risk-card";
+        el.innerHTML = `
+          <div class="risk-header">
+            <span class="risk-badge">Risk ${r.risk_score}/3</span>
+            <span class="risk-type">${r.clause_type.replace("_"," ")}</span>
+            <span class="risk-page">p.${r.page_num}</span>
+          </div>
+          <div class="risk-text">${esc(r.text)}</div>`;
+        list.appendChild(el);
+      });
+    }
+  }
+
+  // ── Vapi Web Call ──
+  function initVapi() {
+    if (vapi) return;
+    vapi = new Vapi(vapiPublicKey);
+
+    vapi.on("call-start", () => {
+      callActive = true;
+      const btn = document.getElementById("call-btn");
+      btn.textContent = "⏹";
+      btn.classList.add("active");
+      document.getElementById("call-label").textContent = "Tap to end call";
+      document.getElementById("call-status").textContent = "Connected — speak now";
+      document.getElementById("transcript-box").style.display = "block";
+      document.getElementById("transcript-box").innerHTML = "";
+    });
+
+    vapi.on("call-end", () => {
+      callActive = false;
+      const btn = document.getElementById("call-btn");
+      btn.textContent = "🎙️";
+      btn.classList.remove("active", "connecting");
+      document.getElementById("call-label").textContent = "Tap to start a voice call";
+      document.getElementById("call-status").textContent = "Call ended";
+      setTimeout(() => document.getElementById("call-status").textContent = "", 3000);
+    });
+
+    vapi.on("speech-start", () => { document.getElementById("call-status").textContent = "Agent is speaking…"; });
+    vapi.on("speech-end", () => { document.getElementById("call-status").textContent = "Listening…"; });
+
+    vapi.on("message", msg => {
+      if (msg.type === "transcript" && msg.transcriptType === "final") {
+        const box = document.getElementById("transcript-box");
+        const div = document.createElement("div");
+        div.className = `transcript-line ${msg.role === "user" ? "user" : "bot"}`;
+        div.innerHTML = `<span class="who">${msg.role === "user" ? "You" : "Companion"}:</span>${esc(msg.transcript)}`;
+        box.appendChild(div);
+        box.scrollTop = box.scrollHeight;
+      }
+    });
+
+    vapi.on("error", e => {
+      console.error("Vapi error", e);
+      document.getElementById("call-status").textContent = "Error — check console";
+      document.getElementById("call-btn").classList.remove("active","connecting");
+      callActive = false;
+    });
+  }
+
+  async function toggleCall() {
+    if (!vapiPublicKey) { await loadConfig(); }
+    if (!vapiPublicKey) { showToast("Voice not configured yet.", true); return; }
+
+    initVapi();
+
+    if (callActive) {
+      vapi.stop();
+    } else {
+      document.getElementById("call-btn").classList.add("connecting");
+      document.getElementById("call-status").textContent = "Connecting…";
+      document.getElementById("transcript-box").innerHTML = "";
+      document.getElementById("transcript-box").style.display = "none";
+      vapi.start(vapiAssistantId, { metadata: { docId: currentDocId } });
+    }
+  }
+
+  function suggestQuery(el) {
+    if (!callActive) {
+      showToast("Start a voice call first, then ask this question aloud", false);
+    }
+  }
+
+  // ── Reset ──
+  function resetToUpload() {
+    if (callActive && vapi) vapi.stop();
+    selectedFile = null; currentDocId = null;
+    fileInput.value = "";
+    uploadBtn.disabled = true;
+    document.getElementById("drop-text-main").textContent = "Drop a PDF here or click to browse";
+    document.getElementById("drop-text-sub").textContent = "Terms of service, loan agreements, consent forms — up to 20 MB";
+    dropZone.classList.remove("has-file");
+    document.querySelector(".drop-icon").textContent = "📄";
+    document.getElementById("results-section").style.display = "none";
+    document.getElementById("progress-section").style.display = "none";
+    document.getElementById("upload-card").style.display = "block";
+    document.getElementById("progress-fill").style.width = "0%";
+    for (let i = 0; i < 5; i++) document.getElementById("s"+i).className = "step-item";
+  }
+
+  // ── Toast ──
+  function showToast(msg, isError=false) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.className = "show" + (isError ? " error" : "");
+    setTimeout(() => t.className = "", 3500);
+  }
+
+  function esc(s) {
+    return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  }
+</script>
+</body>
+</html>
