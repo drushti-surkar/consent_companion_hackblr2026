@@ -106,6 +106,68 @@ async def get_doc(doc_id: str):
 
 
 # ---------------------------------------------------------------------------
+# /lookup — called by Vapi as a tool when user asks a question
+# Vapi POSTs: { "message": { "toolCallList": [{ "function": { "name": "lookup_clause", "arguments": {"question": "...", "doc_id": "..."} } }] } }
+# We return: { "results": [{ "toolCallId": "...", "result": "plain text answer" }] }
+# ---------------------------------------------------------------------------
+
+@app.post("/lookup")
+async def lookup(request: Request):
+    body = await request.json()
+    log.info("LOOKUP body: %s", json.dumps(body)[:500])
+
+    try:
+        # Vapi tool call format
+        msg = body.get("message", {})
+        tool_calls = msg.get("toolCallList", [])
+        if not tool_calls:
+            raise ValueError("no toolCallList")
+
+        tc = tool_calls[0]
+        tc_id   = tc.get("id", "tc1")
+        args    = tc.get("function", {}).get("arguments", {})
+        if isinstance(args, str):
+            args = json.loads(args)
+
+        question = args.get("question", "")
+        doc_id   = args.get("doc_id", "") or next(iter(DOC_REGISTRY), None)
+
+        log.info("LOOKUP question=%r doc_id=%r", question, doc_id)
+
+        if not question:
+            answer = "Please ask a question about the document."
+        elif not doc_id or doc_id not in DOC_REGISTRY:
+            doc_id = next(iter(DOC_REGISTRY), None)
+            if not doc_id:
+                answer = "No document has been uploaded yet."
+            else:
+                answer = await _run_rag(question, doc_id)
+        else:
+            answer = await _run_rag(question, doc_id)
+
+        log.info("LOOKUP answer=%r", answer[:120])
+        return {"results": [{"toolCallId": tc_id, "result": answer}]}
+
+    except Exception as e:
+        log.exception("LOOKUP error: %s", e)
+        return {"results": [{"toolCallId": "tc1", "result": "Sorry, I had trouble looking that up. Please try again."}]}
+
+
+async def _run_rag(question: str, doc_id: str) -> str:
+    """Run the full RAG pipeline in a thread pool so we don't block the event loop."""
+    from retrieval import retrieve_chunks, classify_intent, detect_language, synthesize_answer
+    loop = asyncio.get_event_loop()
+
+    def _rag():
+        language    = detect_language(question)
+        clause_type = classify_intent(question)
+        chunks      = retrieve_chunks(question, doc_id, clause_type)
+        return synthesize_answer(question, chunks, language)
+
+    return await loop.run_in_executor(None, _rag)
+
+
+# ---------------------------------------------------------------------------
 # Vapi custom LLM webhook  (POST /chat)
 # ---------------------------------------------------------------------------
 # Vapi sends an OpenAI-compatible request body. We parse the last user message,
@@ -210,7 +272,8 @@ async def chat(request: Request):
                 log.error(f"Error processing query: {e}")
                 yield chunk("Sorry, I encountered an error while processing your question. Please try again.")
 
-        yield chunk("", finish="stop")
+        # For conversational mode, don't send finish_reason to keep the call open
+        yield chunk("")
         yield "data: [DONE]\n\n"
 
     return StreamingResponse(
@@ -232,11 +295,17 @@ from config import PUBLIC_URL
 @app.get("/config")
 async def get_config():
     """Returns public config the frontend needs (phone number, Vapi keys, etc.)."""
+    demo_id   = os.getenv("DEMO_DOC_ID", "")
+    demo_name = os.getenv("DEMO_DOC_NAME", "")
+    demo_doc  = DOC_REGISTRY.get(demo_id, {})
     return {
-        "phone": os.getenv("VAPI_PHONE_NUMBER", ""),
-        "public_url": PUBLIC_URL,
-        "vapi_public_key": os.getenv("VAPI_PUBLIC_KEY", ""),
+        "phone":            os.getenv("VAPI_PHONE_NUMBER", ""),
+        "public_url":       PUBLIC_URL,
+        "vapi_public_key":  os.getenv("VAPI_PUBLIC_KEY", ""),
         "vapi_assistant_id": os.getenv("VAPI_ASSISTANT_ID", ""),
+        "demo_doc_id":      demo_id,
+        "demo_doc_name":    demo_name,
+        "demo_risk_flags":  demo_doc.get("risk_flags", []),
     }
 
 

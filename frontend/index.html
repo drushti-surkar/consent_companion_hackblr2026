@@ -5,568 +5,736 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Consent Companion</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #080b12;
-      --surface: #0f1420;
-      --surface2: #161c2e;
-      --surface3: #1d2540;
-      --border: #232d4a;
-      --border2: #2a3558;
-      --green: #00e07a;
-      --green-dim: #00a857;
-      --green-glow: rgba(0,224,122,0.15);
-      --red: #ff4f4f;
-      --red-dim: rgba(255,79,79,0.12);
-      --amber: #ffb830;
-      --amber-dim: rgba(255,184,48,0.12);
-      --blue: #4f9eff;
-      --text: #e8eaf6;
-      --muted: #6b7499;
-      --muted2: #4a5278;
-      --radius: 16px;
-      --radius-sm: 10px;
+      --bg: #080808;
+      --bg2: #0f0f0f;
+      --bg3: #141414;
+      --border: rgba(255,255,255,0.08);
+      --border2: rgba(255,255,255,0.14);
+      --green: #00ff87;
+      --green-dim: rgba(0,255,135,0.12);
+      --text: #f0f0f0;
+      --muted: #666;
+      --muted2: #444;
+      --red: #ff3b3b;
+      --amber: #ffb800;
     }
 
+    html { scroll-behavior: smooth; }
+
     body {
-      font-family: 'Inter', -apple-system, sans-serif;
+      font-family: 'Space Grotesk', sans-serif;
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 0 16px 80px;
+      overflow-x: hidden;
     }
 
-    /* ── HERO ── */
-    .hero {
-      width: 100%;
-      max-width: 680px;
-      text-align: center;
-      padding: 56px 0 40px;
-    }
-    .hero-badge {
-      display: inline-flex;
+    /* ─── NAV ─── */
+    nav {
+      display: flex;
       align-items: center;
-      gap: 6px;
-      background: rgba(0,224,122,0.08);
-      border: 1px solid rgba(0,224,122,0.2);
-      border-radius: 20px;
-      padding: 5px 14px;
-      font-size: 12px;
-      font-weight: 500;
+      justify-content: space-between;
+      padding: 20px 40px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: rgba(8,8,8,0.92);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+    }
+    .nav-logo {
+      font-family: 'Space Mono', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
       color: var(--green);
-      margin-bottom: 20px;
-      letter-spacing: 0.02em;
     }
-    .hero h1 {
-      font-size: clamp(28px, 5vw, 42px);
-      font-weight: 800;
-      letter-spacing: -1px;
-      line-height: 1.15;
-      background: linear-gradient(135deg, #fff 40%, var(--green));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 14px;
-    }
-    .hero p {
-      font-size: 16px;
-      color: var(--muted);
-      line-height: 1.65;
-      max-width: 480px;
-      margin: 0 auto;
-    }
-    .hero-langs {
+    .nav-links {
       display: flex;
-      justify-content: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 20px;
+      gap: 40px;
     }
-    .lang-pill {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 4px 12px;
-      font-size: 12px;
+    .nav-links a {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
       color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      color: var(--muted2);
+      letter-spacing: 0.08em;
     }
 
-    /* ── CONTAINER ── */
-    .container { width: 100%; max-width: 680px; }
-
-    /* ── CARD ── */
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 28px;
-      margin-bottom: 16px;
+    /* ─── HERO ─── */
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: calc(100vh - 65px);
+      border-bottom: 1px solid var(--border);
       position: relative;
       overflow: hidden;
     }
-    .card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, transparent 60%);
-      pointer-events: none;
+    .hero-left {
+      padding: 80px 40px 80px 40px;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
     }
-    .card-label {
-      font-size: 11px;
-      font-weight: 600;
+    .hero-eyebrow {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--muted2);
-      margin-bottom: 16px;
+      color: var(--muted);
+      margin-bottom: 40px;
+    }
+    .hero-title {
+      font-size: clamp(42px, 6vw, 80px);
+      font-weight: 700;
+      line-height: 0.95;
+      letter-spacing: -2px;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+    .hero-title .accent { color: var(--green); }
+    .hero-subtitle {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 340px;
+      margin-top: 32px;
+    }
+    .hero-bottom {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-top: 60px;
+    }
+    .hero-right {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-right svg.wireframe {
+      position: absolute;
+      bottom: -40px;
+      right: -60px;
+      width: 110%;
+      height: 110%;
+      opacity: 0.12;
     }
 
-    /* ── DROP ZONE ── */
+    /* Stat blocks */
+    .stat-grid {
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+      height: 100%;
+    }
+    .stat-block {
+      padding: 40px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+    .stat-block:last-child { border-bottom: none; }
+    .stat-number {
+      font-size: clamp(52px, 7vw, 96px);
+      font-weight: 700;
+      letter-spacing: -3px;
+      color: var(--text);
+      line-height: 1;
+    }
+    .stat-number.green { color: var(--green); }
+    .stat-label { font-size: 12px; color: var(--muted); line-height: 1.5; max-width: 220px; margin-top: 12px; }
+    .stat-icon {
+      position: absolute;
+      top: 40px; right: 40px;
+      width: 20px; height: 20px;
+      opacity: 0.3;
+    }
+
+    /* ─── UPLOAD SECTION ─── */
+    #upload-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-left {
+      padding: 60px 40px;
+      border-right: 1px solid var(--border);
+    }
+    .section-right {
+      padding: 60px 40px;
+    }
+    .section-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+    .section-heading {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .section-body { font-size: 13px; color: var(--muted); line-height: 1.7; }
+
+    /* Drop zone */
     #drop-zone {
-      border: 2px dashed var(--border2);
-      border-radius: var(--radius-sm);
-      padding: 44px 24px;
+      border: 1px solid var(--border2);
+      padding: 48px 32px;
       text-align: center;
       cursor: pointer;
       transition: all 0.2s;
-      background: var(--surface2);
+      position: relative;
+      background: var(--bg2);
     }
-    #drop-zone:hover, #drop-zone.drag-over {
-      border-color: var(--green);
-      background: var(--green-glow);
-    }
-    #drop-zone.has-file {
+    #drop-zone::before, #drop-zone::after {
+      content: '';
+      position: absolute;
+      width: 16px; height: 16px;
       border-color: var(--green);
       border-style: solid;
-      background: rgba(0,224,122,0.05);
+      opacity: 0.4;
     }
-    .drop-icon {
-      width: 48px;
-      height: 48px;
-      background: var(--surface3);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 16px;
-      font-size: 22px;
+    #drop-zone::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+    #drop-zone::after  { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+    #drop-zone:hover, #drop-zone.drag-over {
+      border-color: rgba(0,255,135,0.3);
+      background: var(--green-dim);
     }
-    #drop-text-main { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
-    #drop-text-sub { font-size: 13px; color: var(--muted); }
+    #drop-zone.has-file { border-color: rgba(0,255,135,0.5); background: var(--green-dim); }
+    .drop-label { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-top: 16px; }
+    .drop-filename { font-size: 14px; font-weight: 600; color: var(--text); margin-top: 8px; }
     #file-input { display: none; }
 
-    /* ── BUTTON ── */
     .btn {
       display: inline-flex;
       align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 12px 24px;
-      border-radius: 10px;
-      font-size: 14px;
-      font-weight: 600;
+      gap: 10px;
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 700;
+      padding: 14px 28px;
       cursor: pointer;
       border: none;
-      font-family: inherit;
       transition: all 0.15s;
-      white-space: nowrap;
+      text-decoration: none;
     }
-    .btn:disabled { opacity: 0.35; cursor: not-allowed; }
-    .btn-primary {
-      background: var(--green);
-      color: #000;
-      width: 100%;
-      padding: 14px;
-      font-size: 15px;
-      margin-top: 16px;
-      box-shadow: 0 0 24px rgba(0,224,122,0.2);
-    }
-    .btn-primary:hover:not(:disabled) { background: #00f087; box-shadow: 0 0 32px rgba(0,224,122,0.35); }
-    .btn-ghost {
-      background: var(--surface2);
-      color: var(--text);
-      border: 1px solid var(--border);
-      font-size: 13px;
-    }
-    .btn-ghost:hover { background: var(--surface3); }
+    .btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .btn-primary { background: var(--green); color: #000; width: 100%; justify-content: center; margin-top: 16px; }
+    .btn-primary:hover:not(:disabled) { background: #00ff99; }
+    .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border2); }
+    .btn-outline:hover { border-color: var(--text); }
 
-    /* ── PROGRESS ── */
-    #progress-section { display: none; }
-    .steps-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
-    .step-item {
+    /* ─── PROGRESS ─── */
+    #progress-section { display: none; border-bottom: 1px solid var(--border); }
+    .progress-inner { padding: 60px 40px; max-width: 640px; margin: 0 auto; }
+    .progress-heading { font-size: 24px; font-weight: 700; text-transform: uppercase; letter-spacing: -0.5px; margin-bottom: 40px; }
+    .step-row {
       display: flex;
       align-items: center;
-      gap: 12px;
-      font-size: 13px;
+      gap: 16px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+      letter-spacing: 0.05em;
       color: var(--muted);
       transition: color 0.3s;
     }
-    .step-item.active { color: var(--text); }
-    .step-item.done { color: var(--green); }
-    .step-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--border2);
+    .step-row:last-child { border-bottom: none; }
+    .step-row.active { color: var(--text); }
+    .step-row.done { color: var(--green); }
+    .step-num {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      width: 24px;
       flex-shrink: 0;
-      transition: background 0.3s;
+      color: var(--muted2);
+      transition: color 0.3s;
     }
-    .step-item.active .step-dot { background: var(--amber); box-shadow: 0 0 8px var(--amber); }
-    .step-item.done .step-dot { background: var(--green); }
-    .progress-bar { height: 3px; background: var(--surface3); border-radius: 3px; overflow: hidden; margin-top: 4px; }
-    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--green-dim), var(--green)); border-radius: 3px; transition: width 0.5s ease; width: 0%; }
+    .step-row.active .step-num { color: var(--amber); }
+    .step-row.done .step-num { color: var(--green); }
+    .progress-bar-wrap { margin-top: 32px; }
+    .progress-bar { height: 1px; background: var(--border); position: relative; }
+    .progress-fill { height: 1px; background: var(--green); transition: width 0.5s ease; width: 0; position: absolute; top: 0; left: 0; box-shadow: 0 0 8px var(--green); }
 
-    /* ── RESULTS ── */
+    /* ─── RESULTS ─── */
     #results-section { display: none; }
 
-    /* ── VOICE CARD ── */
-    .voice-card {
-      background: linear-gradient(135deg, #0a1628 0%, #0d1f1a 100%);
-      border: 1px solid rgba(0,224,122,0.2);
-      border-radius: var(--radius);
-      padding: 32px 28px;
-      text-align: center;
-      margin-bottom: 16px;
-      position: relative;
-      overflow: hidden;
+    /* Voice block */
+    .voice-block {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 1px solid var(--border);
     }
-    .voice-card::after {
-      content: '';
-      position: absolute;
-      top: -60px; right: -60px;
-      width: 200px; height: 200px;
-      background: radial-gradient(circle, rgba(0,224,122,0.06) 0%, transparent 70%);
-      pointer-events: none;
+    .voice-left {
+      padding: 60px 40px;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
-    .voice-card h2 {
-      font-size: 20px;
+    .voice-title {
+      font-size: 36px;
       font-weight: 700;
-      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: -1px;
+      line-height: 1.1;
+      margin-bottom: 12px;
     }
-    .voice-card p {
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 24px;
-    }
+    .voice-sub { font-size: 12px; color: var(--muted); line-height: 1.6; }
 
-    /* ── CALL BUTTON ── */
     #call-btn {
-      width: 80px;
-      height: 80px;
+      width: 72px; height: 72px;
       border-radius: 50%;
-      border: none;
-      background: var(--green);
-      color: #000;
-      font-size: 30px;
+      border: 1px solid var(--border2);
+      background: transparent;
+      color: var(--green);
+      font-size: 28px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 16px;
-      box-shadow: 0 0 0 0 rgba(0,224,122,0.4);
       transition: all 0.2s;
+      margin-top: 40px;
       position: relative;
     }
-    #call-btn:hover { transform: scale(1.06); }
+    #call-btn:hover { border-color: var(--green); background: var(--green-dim); }
     #call-btn.active {
       background: var(--red);
-      box-shadow: 0 0 0 0 rgba(255,79,79,0.4);
-      animation: pulse-red 1.8s infinite;
-    }
-    #call-btn.connecting {
-      background: var(--amber);
-      animation: pulse-amber 1s infinite;
-    }
-    @keyframes pulse-red {
-      0% { box-shadow: 0 0 0 0 rgba(255,79,79,0.5); }
-      70% { box-shadow: 0 0 0 18px rgba(255,79,79,0); }
-      100% { box-shadow: 0 0 0 0 rgba(255,79,79,0); }
-    }
-    @keyframes pulse-amber {
-      0%, 100% { opacity: 1; } 50% { opacity: 0.6; }
-    }
-    #call-label { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
-    #call-status {
-      font-size: 12px;
-      color: var(--green);
-      min-height: 16px;
-      font-weight: 500;
-    }
-
-    /* ── TRANSCRIPT ── */
-    #transcript-box {
-      display: none;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 14px 16px;
-      margin-top: 16px;
-      text-align: left;
-      max-height: 180px;
-      overflow-y: auto;
-      font-size: 13px;
-      line-height: 1.7;
-    }
-    .transcript-line { margin-bottom: 6px; }
-    .transcript-line .who { font-weight: 600; margin-right: 6px; }
-    .transcript-line.user .who { color: var(--blue); }
-    .transcript-line.bot .who { color: var(--green); }
-
-    /* ── CLAUSE GRID ── */
-    .clause-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-    .clause-chip {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 14px;
-      transition: border-color 0.2s;
-    }
-    .clause-chip:hover { border-color: var(--border2); }
-    .clause-chip .count { font-size: 26px; font-weight: 700; color: var(--text); line-height: 1; }
-    .clause-chip .label { font-size: 11px; color: var(--muted); margin-top: 4px; text-transform: capitalize; font-weight: 500; }
-
-    /* ── RISK FLAGS ── */
-    .risk-card {
-      background: var(--red-dim);
-      border: 1px solid rgba(255,79,79,0.25);
-      border-radius: var(--radius-sm);
-      padding: 14px 16px;
-      margin-bottom: 10px;
-    }
-    .risk-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 8px;
-      flex-wrap: wrap;
-    }
-    .risk-badge {
-      font-size: 10px;
-      font-weight: 700;
-      padding: 3px 9px;
-      border-radius: 20px;
-      background: var(--red);
+      border-color: var(--red);
       color: #fff;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      animation: pulse-call 1.5s infinite;
     }
-    .risk-type {
-      font-size: 11px;
-      color: rgba(255,79,79,0.8);
-      text-transform: capitalize;
-      font-weight: 500;
+    #call-btn.connecting { border-color: var(--amber); color: var(--amber); animation: blink 0.8s infinite; }
+    @keyframes pulse-call {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(255,59,59,0.4); }
+      50% { box-shadow: 0 0 0 12px rgba(255,59,59,0); }
     }
-    .risk-page { font-size: 11px; color: var(--muted); margin-left: auto; }
-    .risk-text { font-size: 12px; color: rgba(232,234,246,0.65); line-height: 1.65; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
-    /* ── DOC INFO BAR ── */
-    .doc-bar {
+    #call-status-text { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.1em; color: var(--green); margin-top: 12px; min-height: 16px; }
+    .call-hint { font-family:'Space Mono',monospace; font-size:10px; color:var(--muted2); letter-spacing:0.1em; text-transform:uppercase; margin-top:8px; }
+
+    /* Transcript */
+    .voice-right {
+      padding: 60px 40px;
       display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 16px;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      margin-bottom: 16px;
+      flex-direction: column;
+    }
+    #transcript-box {
+      flex: 1;
+      overflow-y: auto;
+      max-height: 300px;
+      display: none;
+    }
+    .t-line {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
       font-size: 13px;
-    }
-    .doc-bar-icon { font-size: 18px; }
-    .doc-name-text { font-weight: 500; color: var(--text); }
-    .doc-meta { color: var(--muted); font-size: 12px; margin-left: auto; }
-
-    /* ── SECTION TITLE ── */
-    .section-title {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--muted2);
-      margin-bottom: 12px;
-    }
-    .section-title.danger { color: rgba(255,79,79,0.7); }
-
-    /* ── TOAST ── */
-    #toast {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%) translateY(80px);
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 10px 20px;
-      font-size: 13px;
-      transition: transform 0.3s ease;
-      z-index: 999;
-      white-space: nowrap;
-    }
-    #toast.show { transform: translateX(-50%) translateY(0); }
-    #toast.error { border-color: var(--red); color: var(--red); }
-
-    /* ── DEMO TIPS ── */
-    .tip-row {
+      line-height: 1.6;
       display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 14px;
+      gap: 12px;
     }
+    .t-who {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding-top: 3px;
+      width: 80px;
+      flex-shrink: 0;
+    }
+    .t-who.user { color: var(--muted); }
+    .t-who.bot  { color: var(--green); }
+    .t-text { color: var(--text); }
+
+    .tip-section { margin-top: 24px; }
+    .tip-label { font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted2); margin-bottom:12px; }
+    .tip-grid { display: flex; flex-wrap: wrap; gap: 8px; }
     .tip-pill {
-      background: var(--surface3);
-      border: 1px solid var(--border2);
-      border-radius: 20px;
-      padding: 5px 12px;
-      font-size: 12px;
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.05em;
+      padding: 7px 14px;
+      border: 1px solid var(--border);
       color: var(--muted);
       cursor: pointer;
       transition: all 0.15s;
     }
     .tip-pill:hover { border-color: var(--green); color: var(--green); }
 
-    /* scrollbar */
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+    /* ─── ANALYSIS ─── */
+    .analysis-block { border-bottom: 1px solid var(--border); }
+    .analysis-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 40px;
+      border-bottom: 1px solid var(--border);
+    }
+    .analysis-title { font-size: 11px; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); font-family:'Space Mono',monospace; }
+    .analysis-meta { font-size: 11px; color: var(--muted2); font-family:'Space Mono',monospace; }
+
+    .clause-table { width: 100%; }
+    .clause-row {
+      display: grid;
+      grid-template-columns: 200px 1fr 80px 60px;
+      align-items: center;
+      padding: 18px 40px;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+    .clause-row:hover { background: var(--bg2); }
+    .clause-type { font-size: 13px; font-weight: 600; text-transform: capitalize; }
+    .clause-bar-wrap { height: 2px; background: var(--border); position: relative; }
+    .clause-bar { height: 2px; background: var(--green); position: absolute; top: 0; left: 0; transition: width 0.6s ease; }
+    .clause-count { font-family:'Space Mono',monospace; font-size:11px; color:var(--muted); text-align:right; }
+    .clause-risk-dot { width: 8px; height: 8px; border-radius: 50%; margin-left: auto; }
+
+    /* Risk section */
+    .risk-header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 40px;
+      border-bottom: 1px solid rgba(255,59,59,0.2);
+      background: rgba(255,59,59,0.03);
+    }
+    .risk-title { font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color: rgba(255,59,59,0.7); }
+    .risk-count-badge { font-size:11px; color:var(--red); font-family:'Space Mono',monospace; }
+    .risk-row {
+      display: grid;
+      grid-template-columns: 120px 80px 1fr;
+      gap: 24px;
+      align-items: start;
+      padding: 20px 40px;
+      border-bottom: 1px solid rgba(255,59,59,0.1);
+    }
+    .risk-row:hover { background: rgba(255,59,59,0.03); }
+    .risk-clause-type { font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.08em; color:var(--red); text-transform:capitalize; padding-top:2px; }
+    .risk-score-display { font-size: 24px; font-weight:700; color:var(--red); font-family:'Space Mono',monospace; }
+    .risk-text-content { font-size:12px; color:rgba(240,240,240,0.55); line-height:1.7; }
+
+    /* ─── DOC BAR ─── */
+    .doc-bar {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      padding: 16px 40px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg2);
+    }
+    .doc-bar-name { font-size:13px; font-weight:600; }
+    .doc-bar-meta { font-family:'Space Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:0.08em; }
+    .doc-bar-sep { color:var(--border2); }
+    .doc-bar-reset { margin-left:auto; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      padding: 32px 40px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-left { font-family:'Space Mono',monospace; font-size:10px; color:var(--muted2); letter-spacing:0.1em; }
+    .footer-right { font-family:'Space Mono',monospace; font-size:10px; color:var(--muted2); display:flex;gap:32px; }
+
+    /* ─── TOAST ─── */
+    #toast {
+      position: fixed; bottom:32px; left:50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--bg3);
+      border: 1px solid var(--border2);
+      padding: 12px 24px;
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      transition: transform 0.3s;
+      z-index: 999;
+    }
+    #toast.show { transform: translateX(-50%) translateY(0); }
+    #toast.error { border-color: var(--red); color: var(--red); }
+
+    /* Grid decorative lines */
+    .grid-bg {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 80px 80px;
+      pointer-events: none;
+    }
+
+    @media (max-width: 768px) {
+      .hero, #upload-section, .voice-block { grid-template-columns: 1fr; }
+      .hero-left, .section-left, .voice-left { border-right: none; border-bottom: 1px solid var(--border); }
+      nav { padding: 16px 20px; }
+      .nav-links { display: none; }
+      .hero-left, .section-left, .section-right, .voice-left, .voice-right { padding: 40px 20px; }
+      .clause-row, .risk-row, .analysis-header, .doc-bar { padding-left: 20px; padding-right: 20px; }
+    }
   </style>
 </head>
 <body>
 
-<!-- Hero -->
-<div class="hero">
-  <div class="hero-badge">
-    <span>●</span> Voice-first · Accessible · Multilingual
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Consent Companion</div>
+  <div class="nav-links">
+    <a href="#">Upload</a>
+    <a href="#">Analyze</a>
+    <a href="#">Ask</a>
+    <a href="#">About</a>
   </div>
-  <h1>Understand any legal document<br>by just asking</h1>
-  <p>Upload a PDF. Start a voice call. Ask questions in your language and get plain answers — no legal knowledge needed.</p>
-  <div class="hero-langs">
-    <span class="lang-pill">English</span>
-    <span class="lang-pill">हिंदी</span>
-    <span class="lang-pill">ಕನ್ನಡ</span>
-    <span class="lang-pill">தமிழ்</span>
-    <span class="lang-pill">తెలుగు</span>
-    <span class="lang-pill">मराठी</span>
+  <div class="nav-tag">HackBlr 2026 · PS3</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="grid-bg"></div>
+    <div style="position:relative">
+      <div class="hero-eyebrow">Voice AI · Legal Accessibility · Multilingual</div>
+      <h1 class="hero-title">
+        Understand<br>
+        Any Legal<br>
+        <span class="accent">Document</span><br>
+        By Voice
+      </h1>
+      <p class="hero-subtitle">Upload a PDF. Ask a question in your language. Get a plain answer in seconds — no lawyer, no literacy required.</p>
+    </div>
+    <div class="hero-bottom">
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <span style="font-family:'Space Mono',monospace;font-size:10px;color:var(--muted2);border:1px solid var(--border);padding:4px 10px;">English</span>
+        <span style="font-family:'Space Mono',monospace;font-size:10px;color:var(--muted2);border:1px solid var(--border);padding:4px 10px;">हिंदी</span>
+        <span style="font-family:'Space Mono',monospace;font-size:10px;color:var(--muted2);border:1px solid var(--border);padding:4px 10px;">ಕನ್ನಡ</span>
+        <span style="font-family:'Space Mono',monospace;font-size:10px;color:var(--muted2);border:1px solid var(--border);padding:4px 10px;">தமிழ்</span>
+        <span style="font-family:'Space Mono',monospace;font-size:10px;color:var(--muted2);border:1px solid var(--border);padding:4px 10px;">+12</span>
+      </div>
+    </div>
   </div>
-</div>
 
-<div class="container">
+  <div class="hero-right">
+    <div class="grid-bg"></div>
+    <!-- Wireframe decoration -->
+    <svg class="wireframe" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="300" cy="400" rx="280" ry="160" stroke="white" stroke-width="0.5"/>
+      <ellipse cx="300" cy="360" rx="240" ry="130" stroke="white" stroke-width="0.5"/>
+      <ellipse cx="300" cy="320" rx="200" ry="100" stroke="white" stroke-width="0.5"/>
+      <ellipse cx="300" cy="280" rx="160" ry="70" stroke="white" stroke-width="0.5"/>
+      <ellipse cx="300" cy="240" rx="120" ry="44" stroke="white" stroke-width="0.5"/>
+      <ellipse cx="300" cy="208" rx="80" ry="24" stroke="white" stroke-width="0.5"/>
+      <line x1="300" y1="50" x2="300" y2="560" stroke="white" stroke-width="0.5"/>
+      <line x1="20" y1="400" x2="580" y2="400" stroke="white" stroke-width="0.5"/>
+      <line x1="60" y1="300" x2="540" y2="300" stroke="white" stroke-width="0.5"/>
+      <circle cx="300" cy="200" r="180" stroke="white" stroke-width="0.5"/>
+      <circle cx="300" cy="200" r="120" stroke="white" stroke-width="0.5"/>
+    </svg>
 
-  <!-- STEP 1: Upload -->
-  <div class="card" id="upload-card">
-    <div class="card-label">Step 1 — Upload your document</div>
+    <div class="stat-grid">
+      <div class="stat-block">
+        <svg class="stat-icon" viewBox="0 0 20 20" fill="none">
+          <rect x="1" y="1" width="18" height="18" stroke="white" stroke-width="1"/>
+          <rect x="4" y="4" width="5" height="5" stroke="white" stroke-width="1"/>
+          <rect x="11" y="4" width="5" height="5" stroke="white" stroke-width="1"/>
+          <rect x="4" y="11" width="5" height="5" stroke="white" stroke-width="1"/>
+          <rect x="11" y="11" width="5" height="5" stroke="white" stroke-width="1"/>
+        </svg>
+        <div>
+          <div class="stat-number green">800M</div>
+          <div class="stat-label">Indians who have signed a document they didn't fully understand</div>
+        </div>
+      </div>
+      <div class="stat-block">
+        <svg class="stat-icon" viewBox="0 0 20 20" fill="none">
+          <circle cx="10" cy="10" r="9" stroke="white" stroke-width="1"/>
+          <circle cx="10" cy="10" r="5" stroke="white" stroke-width="1"/>
+          <circle cx="10" cy="10" r="1" fill="white"/>
+        </svg>
+        <div>
+          <div class="stat-number">0.25s</div>
+          <div class="stat-label">Time to first spoken answer via semantic vector retrieval</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
+<!-- UPLOAD SECTION -->
+<section id="upload-section">
+  <div class="section-left">
+    <div class="section-label">01 — Upload</div>
+    <h2 class="section-heading">Drop Your<br>Document</h2>
+    <p class="section-body">PDF only. Terms of service, loan agreements, employment contracts, hospital consent forms. Up to 20 MB.</p>
+    <div style="margin-top:32px;display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;align-items:center;gap:12px;font-size:12px;color:var(--muted)">
+        <span style="color:var(--green)">→</span> Semantic chunking via Qdrant
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;font-size:12px;color:var(--muted)">
+        <span style="color:var(--green)">→</span> GPT-4o-mini clause classifier
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;font-size:12px;color:var(--muted)">
+        <span style="color:var(--green)">→</span> Risk score 0–3 per clause
+      </div>
+    </div>
+  </div>
+
+  <div class="section-right">
+    <div class="section-label">Drop or click</div>
     <div id="drop-zone" onclick="document.getElementById('file-input').click()">
-      <div class="drop-icon">📄</div>
-      <div id="drop-text-main">Drop a PDF here or click to browse</div>
-      <div id="drop-text-sub">Terms of service, loan agreements, consent forms — up to 20 MB</div>
+      <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24" style="color:var(--muted);margin:0 auto">
+        <path stroke-linecap="round" d="M12 16V8m0 0-3 3m3-3 3 3M6.5 19a4.5 4.5 0 0 1-.75-8.928 5 5 0 0 1 9.5-.342A3.5 3.5 0 0 1 17.5 16H6.5Z"/>
+      </svg>
+      <div class="drop-label" id="drop-text">Drag PDF here or click to browse</div>
+      <div class="drop-filename" id="drop-filename"></div>
     </div>
     <input type="file" id="file-input" accept=".pdf"/>
-
     <button class="btn btn-primary" id="upload-btn" disabled onclick="uploadFile()">
-      Analyze Document
+      → Analyze Document
     </button>
   </div>
+</section>
 
-  <!-- STEP 2: Progress -->
-  <div class="card" id="progress-section">
-    <div class="card-label">Analyzing your document</div>
-    <div class="steps-list" id="steps-list">
-      <div class="step-item" id="s0"><div class="step-dot"></div>Extracting text from PDF</div>
-      <div class="step-item" id="s1"><div class="step-dot"></div>Splitting into clauses</div>
-      <div class="step-item" id="s2"><div class="step-dot"></div>Classifying clause types &amp; risk levels</div>
-      <div class="step-item" id="s3"><div class="step-dot"></div>Generating semantic embeddings</div>
-      <div class="step-item" id="s4"><div class="step-dot"></div>Indexing in Qdrant vector database</div>
+<!-- PROGRESS -->
+<section id="progress-section">
+  <div class="progress-inner">
+    <div class="progress-heading">Analyzing</div>
+    <div id="s0" class="step-row"><span class="step-num">01</span>Extracting text from PDF</div>
+    <div id="s1" class="step-row"><span class="step-num">02</span>Splitting into semantic chunks</div>
+    <div id="s2" class="step-row"><span class="step-num">03</span>Classifying clause types &amp; risk levels</div>
+    <div id="s3" class="step-row"><span class="step-num">04</span>Generating vector embeddings</div>
+    <div id="s4" class="step-row"><span class="step-num">05</span>Indexing into Qdrant vector database</div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
     </div>
-    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<div id="results-section">
+
+  <!-- Doc bar -->
+  <div class="doc-bar" id="doc-bar" style="display:none">
+    <span class="doc-bar-name" id="doc-filename">—</span>
+    <span class="doc-bar-sep">|</span>
+    <span class="doc-bar-meta" id="doc-chunks-label">—</span>
+    <button class="btn btn-outline doc-bar-reset" onclick="resetToUpload()" style="padding:8px 16px;font-size:10px">↺ New Document</button>
   </div>
 
-  <!-- RESULTS -->
-  <div id="results-section">
-
-    <!-- Doc info -->
-    <div class="doc-bar">
-      <span class="doc-bar-icon">📋</span>
-      <span class="doc-name-text" id="doc-filename">—</span>
-      <span class="doc-meta" id="doc-chunks-label">— clauses indexed</span>
+  <!-- Voice block -->
+  <div class="voice-block">
+    <div class="voice-left">
+      <div>
+        <div class="section-label">02 — Ask</div>
+        <h2 class="voice-title">Ask By<br>Voice</h2>
+        <p class="voice-sub">Click the button. Speak your question in any language. Get a plain-language answer about this specific document.</p>
+      </div>
+      <div>
+        <button id="call-btn" onclick="toggleCall()">🎙</button>
+        <div id="call-status-text"></div>
+        <div class="call-hint" id="call-hint">Tap to start</div>
+      </div>
     </div>
 
-    <!-- Voice call card -->
-    <div class="voice-card">
-      <h2>Ask questions by voice</h2>
-      <p>Speak in any language — get a plain-language answer in seconds</p>
-
-      <button id="call-btn" onclick="toggleCall()">🎙️</button>
-      <div id="call-label">Tap to start a voice call</div>
-      <div id="call-status"></div>
-
+    <div class="voice-right">
+      <div class="section-label">Conversation</div>
       <div id="transcript-box"></div>
-
-      <div class="tip-row" id="tip-row">
-        <div class="tip-pill" onclick="suggestQuery(this)">Can they sell my data?</div>
-        <div class="tip-pill" onclick="suggestQuery(this)">What if I miss a payment?</div>
-        <div class="tip-pill" onclick="suggestQuery(this)">Can I cancel anytime?</div>
-        <div class="tip-pill" onclick="suggestQuery(this)">Can I sue them?</div>
+      <div class="tip-section">
+        <div class="tip-label">Try asking</div>
+        <div class="tip-grid">
+          <div class="tip-pill" onclick="showToast('Start a call first, then ask this aloud')">Can they sell my data?</div>
+          <div class="tip-pill" onclick="showToast('Start a call first, then ask this aloud')">What if I miss a payment?</div>
+          <div class="tip-pill" onclick="showToast('Start a call first, then ask this aloud')">Can I cancel anytime?</div>
+          <div class="tip-pill" onclick="showToast('Start a call first, then ask this aloud')">Can I sue them?</div>
+          <div class="tip-pill" onclick="showToast('Start a call first, then ask this aloud')">क्या वे मेरा डेटा बेच सकते हैं?</div>
+        </div>
       </div>
     </div>
-
-    <!-- Clause breakdown -->
-    <div class="card">
-      <div class="section-title">Clauses found by type</div>
-      <div class="clause-grid" id="clause-grid"></div>
-
-      <!-- Risk flags -->
-      <div id="risk-section" style="display:none">
-        <div class="section-title danger" style="margin-top:20px">⚠ High-risk clauses — read before you sign</div>
-        <div id="risk-list"></div>
-      </div>
-
-      <div style="margin-top:20px;display:flex;gap:10px">
-        <button class="btn btn-ghost" onclick="resetToUpload()">Upload another document</button>
-      </div>
-    </div>
-
   </div>
+
+  <!-- Clause analysis -->
+  <div class="analysis-block">
+    <div class="analysis-header">
+      <span class="analysis-title">03 — Clause Breakdown</span>
+      <span class="analysis-meta" id="total-clauses-label">—</span>
+    </div>
+    <div class="clause-table" id="clause-table"></div>
+  </div>
+
+  <!-- Risk flags -->
+  <div id="risk-block" style="display:none">
+    <div class="risk-header-bar">
+      <span class="risk-title">⚠ High-Risk Clauses — Read Before You Sign</span>
+      <span class="risk-count-badge" id="risk-count-label">—</span>
+    </div>
+    <div id="risk-list"></div>
+  </div>
+
 </div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">Consent Companion · HackBlr 2026 · PS3 — Voice AI for Accessibility</div>
+  <div class="footer-right">
+    <span>Vapi</span>
+    <span>Qdrant</span>
+    <span>OpenAI</span>
+    <span>FastAPI</span>
+  </div>
+</footer>
 
 <div id="toast"></div>
 
-<!-- Vapi Web SDK (locally bundled) -->
 <script src="/vapi.bundle.js"></script>
-
 <script>
   const BACKEND = window.location.origin;
   let selectedFile = null;
-  let vapiPhone = "";
-  let vapiPublicKey = "";
-  let vapiAssistantId = "";
-  let currentDocId = null;
-  let vapi = null;
-  let callActive = false;
+  let vapiPublicKey = "", vapiAssistantId = "", currentDocId = null;
+  let vapi = null, callActive = false;
 
-  // ── Config load ──
+  // ── Config ──
   async function loadConfig() {
     try {
       const r = await fetch(BACKEND + "/config");
       if (r.ok) {
         const d = await r.json();
-        if (d.phone) vapiPhone = d.phone;
-        if (d.vapi_public_key) vapiPublicKey = d.vapi_public_key;
+        if (d.vapi_public_key)   vapiPublicKey   = d.vapi_public_key;
         if (d.vapi_assistant_id) vapiAssistantId = d.vapi_assistant_id;
+        if (d.demo_doc_id) {
+          currentDocId = d.demo_doc_id;
+          window._docRegistry = { doc_id: d.demo_doc_id, filename: d.demo_doc_name || "demo", risk_flags: d.demo_risk_flags || [] };
+        }
       }
-    } catch (_) {}
+    } catch(_) {}
   }
   loadConfig();
 
-  // ── Drag & drop ──
+  // ── Drag & Drop ──
   const dropZone = document.getElementById("drop-zone");
   const fileInput = document.getElementById("file-input");
   const uploadBtn = document.getElementById("upload-btn");
@@ -574,59 +742,50 @@
   dropZone.addEventListener("dragover", e => { e.preventDefault(); dropZone.classList.add("drag-over"); });
   dropZone.addEventListener("dragleave", () => dropZone.classList.remove("drag-over"));
   dropZone.addEventListener("drop", e => {
-    e.preventDefault();
-    dropZone.classList.remove("drag-over");
+    e.preventDefault(); dropZone.classList.remove("drag-over");
     const f = e.dataTransfer.files[0];
     if (f && f.name.toLowerCase().endsWith(".pdf")) setFile(f);
-    else showToast("Please drop a PDF file.", true);
+    else showToast("PDF files only.", true);
   });
   fileInput.addEventListener("change", () => { if (fileInput.files[0]) setFile(fileInput.files[0]); });
 
   function setFile(f) {
     selectedFile = f;
     uploadBtn.disabled = false;
-    document.getElementById("drop-text-main").textContent = f.name;
-    document.getElementById("drop-text-sub").textContent = (f.size / 1024 / 1024).toFixed(1) + " MB · Ready to analyze";
+    document.getElementById("drop-text").textContent = "File selected";
+    document.getElementById("drop-filename").textContent = f.name;
     dropZone.classList.add("has-file");
-    document.querySelector(".drop-icon").textContent = "✅";
   }
 
   // ── Upload ──
-  const STEP_TIMINGS = [0, 1800, 3600, 5400, 7200];
   async function uploadFile() {
     if (!selectedFile) return;
     uploadBtn.disabled = true;
-
-    document.getElementById("upload-card").style.display = "none";
+    document.getElementById("upload-section").style.display = "none";
     document.getElementById("progress-section").style.display = "block";
 
-    // Animate steps
-    let si = 0;
-    const pcts = [10, 30, 55, 78, 93];
-    STEP_TIMINGS.forEach((t, i) => {
+    const timings = [0, 1800, 3600, 5200, 6800];
+    const pcts    = [10, 30, 55, 78, 93];
+    timings.forEach((t, i) => {
       setTimeout(() => {
-        if (si > 0) document.getElementById("s"+(si-1)).className = "step-item done";
-        document.getElementById("s"+i).className = "step-item active";
+        if (i > 0) document.getElementById("s"+(i-1)).className = "step-row done";
+        document.getElementById("s"+i).className = "step-row active";
         document.getElementById("progress-fill").style.width = pcts[i] + "%";
-        si = i + 1;
       }, t);
     });
 
-    const formData = new FormData();
-    formData.append("file", selectedFile);
-
+    const form = new FormData();
+    form.append("file", selectedFile);
     try {
-      const resp = await fetch(BACKEND + "/ingest", { method: "POST", body: formData });
-      if (!resp.ok) { const e = await resp.json(); throw new Error(e.detail || "Upload failed."); }
+      const resp = await fetch(BACKEND + "/ingest", { method: "POST", body: form });
+      if (!resp.ok) { const e = await resp.json(); throw new Error(e.detail || "Upload failed"); }
       const data = await resp.json();
-
-      // Mark all done
       document.getElementById("progress-fill").style.width = "100%";
-      for (let i = 0; i < 5; i++) document.getElementById("s"+i).className = "step-item done";
+      for (let i = 0; i < 5; i++) document.getElementById("s"+i).className = "step-row done";
       setTimeout(() => showResults(data), 500);
-    } catch (e) {
+    } catch(e) {
       document.getElementById("progress-section").style.display = "none";
-      document.getElementById("upload-card").style.display = "block";
+      document.getElementById("upload-section").style.display = "grid";
       uploadBtn.disabled = false;
       showToast(e.message, true);
     }
@@ -636,113 +795,112 @@
   function showResults(data) {
     document.getElementById("progress-section").style.display = "none";
     document.getElementById("results-section").style.display = "block";
+    document.getElementById("doc-bar").style.display = "flex";
     currentDocId = data.doc_id;
+    window._docRegistry = data;
 
     document.getElementById("doc-filename").textContent = data.filename;
     document.getElementById("doc-chunks-label").textContent = data.total_chunks + " clauses indexed";
 
-    // Clause grid
-    const grid = document.getElementById("clause-grid");
-    grid.innerHTML = "";
-    const labels = { data_rights:"Data Rights", cancellation:"Cancellation", liability:"Liability",
-                     payment:"Payment", termination:"Termination", arbitration:"Arbitration", general:"General" };
+    // Clause table
     const counts = data.clause_counts || {};
+    const maxCount = Math.max(...Object.values(counts), 1);
+    const labels = { data_rights:"Data Rights", cancellation:"Cancellation", liability:"Liability", payment:"Payment", termination:"Termination", arbitration:"Arbitration", general:"General" };
+    const riskColors = { 0:"#3a3a3a", 1:"#ffb800", 2:"#ff6b00", 3:"#ff3b3b" };
+    const table = document.getElementById("clause-table");
+    document.getElementById("total-clauses-label").textContent = data.total_chunks + " total clauses";
+    table.innerHTML = "";
     Object.entries(counts).sort((a,b)=>b[1]-a[1]).forEach(([type, count]) => {
-      const el = document.createElement("div");
-      el.className = "clause-chip";
-      el.innerHTML = `<div class="count">${count}</div><div class="label">${labels[type]||type}</div>`;
-      grid.appendChild(el);
+      const row = document.createElement("div");
+      row.className = "clause-row";
+      const pct = Math.round((count/maxCount)*100);
+      row.innerHTML = `
+        <div class="clause-type">${labels[type]||type}</div>
+        <div class="clause-bar-wrap"><div class="clause-bar" style="width:${pct}%"></div></div>
+        <div class="clause-count">${count}</div>
+        <div style="display:flex;justify-content:flex-end"><div class="clause-risk-dot" style="background:${riskColors[Math.min(3,count)]}"></div></div>`;
+      table.appendChild(row);
     });
 
     // Risk flags
     const risks = data.risk_flags || [];
     if (risks.length > 0) {
-      document.getElementById("risk-section").style.display = "block";
+      document.getElementById("risk-block").style.display = "block";
+      document.getElementById("risk-count-label").textContent = risks.length + " flagged";
       const list = document.getElementById("risk-list");
       list.innerHTML = "";
-      risks.slice(0,5).forEach(r => {
-        const el = document.createElement("div");
-        el.className = "risk-card";
-        el.innerHTML = `
-          <div class="risk-header">
-            <span class="risk-badge">Risk ${r.risk_score}/3</span>
-            <span class="risk-type">${r.clause_type.replace("_"," ")}</span>
-            <span class="risk-page">p.${r.page_num}</span>
-          </div>
-          <div class="risk-text">${esc(r.text)}</div>`;
-        list.appendChild(el);
+      risks.slice(0,6).forEach(r => {
+        const row = document.createElement("div");
+        row.className = "risk-row";
+        row.innerHTML = `
+          <div class="risk-clause-type">${r.clause_type.replace("_"," ")}<br><span style="color:var(--muted2);font-size:9px">p.${r.page_num}</span></div>
+          <div class="risk-score-display">${r.risk_score}/3</div>
+          <div class="risk-text-content">${esc(r.text)}</div>`;
+        list.appendChild(row);
       });
     }
   }
 
-  // ── Vapi Web Call ──
+  // ── Vapi ──
   function initVapi() {
     if (vapi) return;
     vapi = new Vapi(vapiPublicKey);
 
     vapi.on("call-start", () => {
       callActive = true;
-      const btn = document.getElementById("call-btn");
-      btn.textContent = "⏹";
-      btn.classList.add("active");
-      document.getElementById("call-label").textContent = "Tap to end call";
-      document.getElementById("call-status").textContent = "Connected — speak now";
+      document.getElementById("call-btn").className = "active";
+      document.getElementById("call-btn").textContent = "⏹";
+      document.getElementById("call-status-text").textContent = "Connected";
+      document.getElementById("call-hint").textContent = "Tap to end";
       document.getElementById("transcript-box").style.display = "block";
       document.getElementById("transcript-box").innerHTML = "";
     });
 
     vapi.on("call-end", () => {
       callActive = false;
-      const btn = document.getElementById("call-btn");
-      btn.textContent = "🎙️";
-      btn.classList.remove("active", "connecting");
-      document.getElementById("call-label").textContent = "Tap to start a voice call";
-      document.getElementById("call-status").textContent = "Call ended";
-      setTimeout(() => document.getElementById("call-status").textContent = "", 3000);
+      document.getElementById("call-btn").className = "";
+      document.getElementById("call-btn").textContent = "🎙";
+      document.getElementById("call-status-text").textContent = "";
+      document.getElementById("call-hint").textContent = "Tap to start";
     });
 
-    vapi.on("speech-start", () => { document.getElementById("call-status").textContent = "Agent is speaking…"; });
-    vapi.on("speech-end", () => { document.getElementById("call-status").textContent = "Listening…"; });
+    vapi.on("speech-start", () => { document.getElementById("call-status-text").textContent = "Speaking…"; });
+    vapi.on("speech-end",   () => { document.getElementById("call-status-text").textContent = "Listening…"; });
 
     vapi.on("message", msg => {
       if (msg.type === "transcript" && msg.transcriptType === "final") {
         const box = document.getElementById("transcript-box");
-        const div = document.createElement("div");
-        div.className = `transcript-line ${msg.role === "user" ? "user" : "bot"}`;
-        div.innerHTML = `<span class="who">${msg.role === "user" ? "You" : "Companion"}:</span>${esc(msg.transcript)}`;
-        box.appendChild(div);
+        const d = document.createElement("div");
+        d.className = "t-line";
+        const isUser = msg.role === "user";
+        d.innerHTML = `<span class="t-who ${isUser?'user':'bot'}">${isUser?'You':'Companion'}</span><span class="t-text">${esc(msg.transcript)}</span>`;
+        box.appendChild(d);
         box.scrollTop = box.scrollHeight;
       }
     });
 
     vapi.on("error", e => {
-      console.error("Vapi error", e);
-      document.getElementById("call-status").textContent = "Error — check console";
-      document.getElementById("call-btn").classList.remove("active","connecting");
+      const raw = JSON.stringify(e, Object.getOwnPropertyNames(e));
+      console.error("VAPI ERROR:", raw);
+      document.getElementById("call-status-text").textContent = "Error: " + (e?.error?.message || e?.message || e?.type || raw.slice(0,80));
+      document.getElementById("call-btn").className = "";
+      document.getElementById("call-btn").textContent = "🎙";
       callActive = false;
     });
   }
 
   async function toggleCall() {
     if (!vapiPublicKey) { await loadConfig(); }
-    if (!vapiPublicKey) { showToast("Voice not configured yet.", true); return; }
-
+    if (!vapiPublicKey) { showToast("Voice not configured.", true); return; }
     initVapi();
-
     if (callActive) {
       vapi.stop();
     } else {
-      document.getElementById("call-btn").classList.add("connecting");
-      document.getElementById("call-status").textContent = "Connecting…";
+      document.getElementById("call-btn").className = "connecting";
+      document.getElementById("call-status-text").textContent = "Connecting…";
       document.getElementById("transcript-box").innerHTML = "";
       document.getElementById("transcript-box").style.display = "none";
-      vapi.start(vapiAssistantId, { metadata: { docId: currentDocId } });
-    }
-  }
-
-  function suggestQuery(el) {
-    if (!callActive) {
-      showToast("Start a voice call first, then ask this question aloud", false);
+      vapi.start(vapiAssistantId);
     }
   }
 
@@ -752,23 +910,23 @@
     selectedFile = null; currentDocId = null;
     fileInput.value = "";
     uploadBtn.disabled = true;
-    document.getElementById("drop-text-main").textContent = "Drop a PDF here or click to browse";
-    document.getElementById("drop-text-sub").textContent = "Terms of service, loan agreements, consent forms — up to 20 MB";
+    document.getElementById("drop-text").textContent = "Drag PDF here or click to browse";
+    document.getElementById("drop-filename").textContent = "";
     dropZone.classList.remove("has-file");
-    document.querySelector(".drop-icon").textContent = "📄";
     document.getElementById("results-section").style.display = "none";
+    document.getElementById("doc-bar").style.display = "none";
     document.getElementById("progress-section").style.display = "none";
-    document.getElementById("upload-card").style.display = "block";
+    document.getElementById("upload-section").style.display = "grid";
     document.getElementById("progress-fill").style.width = "0%";
-    for (let i = 0; i < 5; i++) document.getElementById("s"+i).className = "step-item";
+    for (let i=0;i<5;i++) document.getElementById("s"+i).className="step-row";
   }
 
   // ── Toast ──
   function showToast(msg, isError=false) {
     const t = document.getElementById("toast");
     t.textContent = msg;
-    t.className = "show" + (isError ? " error" : "");
-    setTimeout(() => t.className = "", 3500);
+    t.className = "show" + (isError?" error":"");
+    setTimeout(() => t.className="", 3500);
   }
 
   function esc(s) {

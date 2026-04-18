@@ -33,6 +33,7 @@ Rules:
 - Keep answers to 4 sentences or less
 - If a clause is risky or limits the user's rights, say so clearly
 - If you cannot find the answer, say: "I couldn't find that in the document. Try asking about data sharing, cancellation, or payment terms."
+- After answering, briefly ask if they have any other questions about the document.
 """
 
 
