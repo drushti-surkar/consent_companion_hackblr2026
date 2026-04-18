@@ -49,7 +49,7 @@
     }
     .nav-logo {
       font-family: 'Space Mono', monospace;
-      font-size: 13px;
+      font-size: 16px;
       font-weight: 700;
       letter-spacing: 0.15em;
       text-transform: uppercase;
@@ -60,7 +60,7 @@
       gap: 40px;
     }
     .nav-links a {
-      font-size: 11px;
+      font-size: 14px;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--muted);
@@ -70,7 +70,7 @@
     .nav-links a:hover { color: var(--text); }
     .nav-tag {
       font-family: 'Space Mono', monospace;
-      font-size: 10px;
+      font-size: 13px;
       color: var(--muted2);
       letter-spacing: 0.08em;
     }
@@ -94,14 +94,14 @@
     }
     .hero-eyebrow {
       font-family: 'Space Mono', monospace;
-      font-size: 10px;
+      font-size: 13px;
       letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--muted);
       margin-bottom: 40px;
     }
     .hero-title {
-      font-size: clamp(42px, 6vw, 80px);
+      font-size: clamp(52px, 7vw, 96px);
       font-weight: 700;
       line-height: 0.95;
       letter-spacing: -2px;
@@ -110,10 +110,10 @@
     }
     .hero-title .accent { color: var(--green); }
     .hero-subtitle {
-      font-size: 14px;
+      font-size: 18px;
       color: var(--muted);
       line-height: 1.7;
-      max-width: 340px;
+      max-width: 400px;
       margin-top: 32px;
     }
     .hero-bottom {
@@ -160,7 +160,7 @@
       line-height: 1;
     }
     .stat-number.green { color: var(--green); }
-    .stat-label { font-size: 12px; color: var(--muted); line-height: 1.5; max-width: 220px; margin-top: 12px; }
+    .stat-label { font-size: 16px; color: var(--muted); line-height: 1.5; max-width: 260px; margin-top: 12px; }
     .stat-icon {
       position: absolute;
       top: 40px; right: 40px;
@@ -187,13 +187,13 @@
     }
     .problem-label {
       font-family: 'Space Mono', monospace;
-      font-size: 10px;
+      font-size: 13px;
       letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--red);
     }
     .problem-headline {
-      font-size: clamp(32px, 4.5vw, 60px);
+      font-size: clamp(38px, 5vw, 68px);
       font-weight: 700;
       line-height: 1.05;
       letter-spacing: -1.5px;
@@ -204,10 +204,10 @@
       color: var(--red);
     }
     .problem-body {
-      font-size: 14px;
+      font-size: 17px;
       color: var(--muted);
       line-height: 1.8;
-      max-width: 420px;
+      max-width: 460px;
     }
     .problem-right {
       display: flex;
@@ -231,10 +231,10 @@
       font-family: 'Space Mono', monospace;
     }
     .problem-stat-text {
-      font-size: 12px;
+      font-size: 16px;
       color: var(--muted);
       line-height: 1.6;
-      max-width: 260px;
+      max-width: 300px;
     }
 
     /* ─── UPLOAD SECTION ─── */
@@ -252,20 +252,20 @@
     }
     .section-label {
       font-family: 'Space Mono', monospace;
-      font-size: 10px;
+      font-size: 13px;
       letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--muted);
       margin-bottom: 32px;
     }
     .section-heading {
-      font-size: 28px;
+      font-size: 38px;
       font-weight: 700;
       letter-spacing: -0.5px;
       text-transform: uppercase;
       margin-bottom: 16px;
     }
-    .section-body { font-size: 13px; color: var(--muted); line-height: 1.7; }
+    .section-body { font-size: 17px; color: var(--muted); line-height: 1.7; }
 
     /* Drop zone */
     #drop-zone {
@@ -292,8 +292,8 @@
       background: var(--green-dim);
     }
     #drop-zone.has-file { border-color: rgba(0,255,135,0.5); background: var(--green-dim); }
-    .drop-label { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-top: 16px; }
-    .drop-filename { font-size: 14px; font-weight: 600; color: var(--text); margin-top: 8px; }
+    .drop-label { font-family: 'Space Mono', monospace; font-size: 14px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-top: 16px; }
+    .drop-filename { font-size: 17px; font-weight: 600; color: var(--text); margin-top: 8px; }
     #file-input { display: none; }
 
     .btn {
@@ -301,11 +301,11 @@
       align-items: center;
       gap: 10px;
       font-family: 'Space Mono', monospace;
-      font-size: 11px;
+      font-size: 14px;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       font-weight: 700;
-      padding: 14px 28px;
+      padding: 16px 32px;
       cursor: pointer;
       border: none;
       transition: all 0.15s;
@@ -320,14 +320,14 @@
     /* ─── PROGRESS ─── */
     #progress-section { display: none; border-bottom: 1px solid var(--border); }
     .progress-inner { padding: 60px 40px; max-width: 640px; margin: 0 auto; }
-    .progress-heading { font-size: 24px; font-weight: 700; text-transform: uppercase; letter-spacing: -0.5px; margin-bottom: 40px; }
+    .progress-heading { font-size: 32px; font-weight: 700; text-transform: uppercase; letter-spacing: -0.5px; margin-bottom: 40px; }
     .step-row {
       display: flex;
       align-items: center;
       gap: 16px;
-      padding: 14px 0;
+      padding: 18px 0;
       border-bottom: 1px solid var(--border);
-      font-size: 12px;
+      font-size: 16px;
       letter-spacing: 0.05em;
       color: var(--muted);
       transition: color 0.3s;
@@ -337,8 +337,8 @@
     .step-row.done { color: var(--green); }
     .step-num {
       font-family: 'Space Mono', monospace;
-      font-size: 10px;
-      width: 24px;
+      font-size: 13px;
+      width: 28px;
       flex-shrink: 0;
       color: var(--muted2);
       transition: color 0.3s;
@@ -366,14 +366,14 @@
       justify-content: space-between;
     }
     .voice-title {
-      font-size: 36px;
+      font-size: 48px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: -1px;
       line-height: 1.1;
       margin-bottom: 12px;
     }
-    .voice-sub { font-size: 12px; color: var(--muted); line-height: 1.6; }
+    .voice-sub { font-size: 17px; color: var(--muted); line-height: 1.6; }
 
     #call-btn {
       width: 72px; height: 72px;
@@ -404,8 +404,8 @@
     }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
-    #call-status-text { font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.1em; color: var(--green); margin-top: 12px; min-height: 16px; }
-    .call-hint { font-family:'Space Mono',monospace; font-size:10px; color:var(--muted2); letter-spacing:0.1em; text-transform:uppercase; margin-top:8px; }
+    #call-status-text { font-family: 'Space Mono', monospace; font-size: 14px; letter-spacing: 0.1em; color: var(--green); margin-top: 12px; min-height: 20px; }
+    .call-hint { font-family:'Space Mono',monospace; font-size:13px; color:var(--muted2); letter-spacing:0.1em; text-transform:uppercase; margin-top:8px; }
 
     /* Transcript */
     .voice-right {
@@ -420,20 +420,20 @@
       display: none;
     }
     .t-line {
-      padding: 12px 0;
+      padding: 14px 0;
       border-bottom: 1px solid var(--border);
-      font-size: 13px;
+      font-size: 16px;
       line-height: 1.6;
       display: flex;
       gap: 12px;
     }
     .t-who {
       font-family: 'Space Mono', monospace;
-      font-size: 9px;
+      font-size: 12px;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       padding-top: 3px;
-      width: 80px;
+      width: 90px;
       flex-shrink: 0;
     }
     .t-who.user { color: var(--muted); }
@@ -441,13 +441,13 @@
     .t-text { color: var(--text); }
 
     .tip-section { margin-top: 24px; }
-    .tip-label { font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted2); margin-bottom:12px; }
+    .tip-label { font-family:'Space Mono',monospace; font-size:13px; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted2); margin-bottom:12px; }
     .tip-grid { display: flex; flex-wrap: wrap; gap: 8px; }
     .tip-pill {
       font-family: 'Space Mono', monospace;
-      font-size: 10px;
+      font-size: 13px;
       letter-spacing: 0.05em;
-      padding: 7px 14px;
+      padding: 9px 16px;
       border: 1px solid var(--border);
       color: var(--muted);
       cursor: pointer;
@@ -464,8 +464,8 @@
       padding: 24px 40px;
       border-bottom: 1px solid var(--border);
     }
-    .analysis-title { font-size: 11px; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); font-family:'Space Mono',monospace; }
-    .analysis-meta { font-size: 11px; color: var(--muted2); font-family:'Space Mono',monospace; }
+    .analysis-title { font-size: 14px; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); font-family:'Space Mono',monospace; }
+    .analysis-meta { font-size: 14px; color: var(--muted2); font-family:'Space Mono',monospace; }
 
     .clause-table { width: 100%; }
     .clause-row {
@@ -477,10 +477,10 @@
       transition: background 0.15s;
     }
     .clause-row:hover { background: var(--bg2); }
-    .clause-type { font-size: 13px; font-weight: 600; text-transform: capitalize; }
+    .clause-type { font-size: 16px; font-weight: 600; text-transform: capitalize; }
     .clause-bar-wrap { height: 2px; background: var(--border); position: relative; }
     .clause-bar { height: 2px; background: var(--green); position: absolute; top: 0; left: 0; transition: width 0.6s ease; }
-    .clause-count { font-family:'Space Mono',monospace; font-size:11px; color:var(--muted); text-align:right; }
+    .clause-count { font-family:'Space Mono',monospace; font-size:14px; color:var(--muted); text-align:right; }
     .clause-risk-dot { width: 8px; height: 8px; border-radius: 50%; margin-left: auto; }
 
     /* Risk section */
@@ -492,8 +492,8 @@
       border-bottom: 1px solid rgba(255,59,59,0.2);
       background: rgba(255,59,59,0.03);
     }
-    .risk-title { font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color: rgba(255,59,59,0.7); }
-    .risk-count-badge { font-size:11px; color:var(--red); font-family:'Space Mono',monospace; }
+    .risk-title { font-family:'Space Mono',monospace; font-size:14px; letter-spacing:0.15em; text-transform:uppercase; color: rgba(255,59,59,0.7); }
+    .risk-count-badge { font-size:14px; color:var(--red); font-family:'Space Mono',monospace; }
     .risk-row {
       display: grid;
       grid-template-columns: 120px 80px 1fr;
@@ -503,9 +503,9 @@
       border-bottom: 1px solid rgba(255,59,59,0.1);
     }
     .risk-row:hover { background: rgba(255,59,59,0.03); }
-    .risk-clause-type { font-family:'Space Mono',monospace; font-size:10px; letter-spacing:0.08em; color:var(--red); text-transform:capitalize; padding-top:2px; }
-    .risk-score-display { font-size: 24px; font-weight:700; color:var(--red); font-family:'Space Mono',monospace; }
-    .risk-text-content { font-size:12px; color:rgba(240,240,240,0.55); line-height:1.7; }
+    .risk-clause-type { font-family:'Space Mono',monospace; font-size:13px; letter-spacing:0.08em; color:var(--red); text-transform:capitalize; padding-top:2px; }
+    .risk-score-display { font-size: 32px; font-weight:700; color:var(--red); font-family:'Space Mono',monospace; }
+    .risk-text-content { font-size:15px; color:rgba(240,240,240,0.55); line-height:1.7; }
 
     /* ─── DOC BAR ─── */
     .doc-bar {
@@ -516,8 +516,8 @@
       border-bottom: 1px solid var(--border);
       background: var(--bg2);
     }
-    .doc-bar-name { font-size:13px; font-weight:600; }
-    .doc-bar-meta { font-family:'Space Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:0.08em; }
+    .doc-bar-name { font-size:16px; font-weight:600; }
+    .doc-bar-meta { font-family:'Space Mono',monospace; font-size:13px; color:var(--muted); letter-spacing:0.08em; }
     .doc-bar-sep { color:var(--border2); }
     .doc-bar-reset { margin-left:auto; }
 
@@ -529,8 +529,8 @@
       align-items: center;
       justify-content: space-between;
     }
-    .footer-left { font-family:'Space Mono',monospace; font-size:10px; color:var(--muted2); letter-spacing:0.1em; }
-    .footer-right { font-family:'Space Mono',monospace; font-size:10px; color:var(--muted2); display:flex;gap:32px; }
+    .footer-left { font-family:'Space Mono',monospace; font-size:13px; color:var(--muted2); letter-spacing:0.1em; }
+    .footer-right { font-family:'Space Mono',monospace; font-size:13px; color:var(--muted2); display:flex;gap:32px; }
 
     /* ─── TOAST ─── */
     #toast {
@@ -538,9 +538,9 @@
       transform: translateX(-50%) translateY(80px);
       background: var(--bg3);
       border: 1px solid var(--border2);
-      padding: 12px 24px;
+      padding: 14px 28px;
       font-family: 'Space Mono', monospace;
-      font-size: 11px;
+      font-size: 14px;
       letter-spacing: 0.05em;
       transition: transform 0.3s;
       z-index: 999;
@@ -601,11 +601,11 @@
     </div>
     <div class="hero-bottom">
       <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <span style="font-family:'Space Mono',monospace;font-size:10px;color:var(--muted2);border:1px solid var(--border);padding:4px 10px;">English</span>
-        <span style="font-family:'Space Mono',monospace;font-size:10px;color:var(--muted2);border:1px solid var(--border);padding:4px 10px;">हिंदी</span>
-        <span style="font-family:'Space Mono',monospace;font-size:10px;color:var(--muted2);border:1px solid var(--border);padding:4px 10px;">ಕನ್ನಡ</span>
-        <span style="font-family:'Space Mono',monospace;font-size:10px;color:var(--muted2);border:1px solid var(--border);padding:4px 10px;">தமிழ்</span>
-        <span style="font-family:'Space Mono',monospace;font-size:10px;color:var(--muted2);border:1px solid var(--border);padding:4px 10px;">+12</span>
+        <span style="font-family:'Space Mono',monospace;font-size:14px;color:var(--muted2);border:1px solid var(--border);padding:6px 14px;">English</span>
+        <span style="font-family:'Space Mono',monospace;font-size:14px;color:var(--muted2);border:1px solid var(--border);padding:6px 14px;">हिंदी</span>
+        <span style="font-family:'Space Mono',monospace;font-size:14px;color:var(--muted2);border:1px solid var(--border);padding:6px 14px;">ಕನ್ನಡ</span>
+        <span style="font-family:'Space Mono',monospace;font-size:14px;color:var(--muted2);border:1px solid var(--border);padding:6px 14px;">தமிழ்</span>
+        <span style="font-family:'Space Mono',monospace;font-size:14px;color:var(--muted2);border:1px solid var(--border);padding:6px 14px;">+12</span>
       </div>
     </div>
   </div>
@@ -698,13 +698,13 @@
     <h2 class="section-heading">Drop Your<br>Document</h2>
     <p class="section-body">PDF only. Terms of service, loan agreements, employment contracts, hospital consent forms. Up to 20 MB.</p>
     <div style="margin-top:32px;display:flex;flex-direction:column;gap:8px">
-      <div style="display:flex;align-items:center;gap:12px;font-size:12px;color:var(--muted)">
+      <div style="display:flex;align-items:center;gap:12px;font-size:16px;color:var(--muted)">
         <span style="color:var(--green)">→</span> Semantic chunking via Qdrant
       </div>
-      <div style="display:flex;align-items:center;gap:12px;font-size:12px;color:var(--muted)">
+      <div style="display:flex;align-items:center;gap:12px;font-size:16px;color:var(--muted)">
         <span style="color:var(--green)">→</span> GPT-4o-mini clause classifier
       </div>
-      <div style="display:flex;align-items:center;gap:12px;font-size:12px;color:var(--muted)">
+      <div style="display:flex;align-items:center;gap:12px;font-size:16px;color:var(--muted)">
         <span style="color:var(--green)">→</span> Risk score 0–3 per clause
       </div>
     </div>
