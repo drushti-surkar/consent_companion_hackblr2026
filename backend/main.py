@@ -8,6 +8,7 @@ Endpoints:
 """
 
 import io
+import os
 import json
 import asyncio
 import logging
@@ -24,10 +25,20 @@ from pydantic import BaseModel
 
 from ingest import ingest_document
 from retrieval import retrieve_chunks, classify_intent, detect_language, synthesize_answer_stream
-from config import OPENAI_API_KEY, QDRANT_HOST, QDRANT_API_KEY
+from config import OPENAI_API_KEY, QDRANT_HOST, QDRANT_API_KEY, PUBLIC_URL
 from openai import OpenAI
 
 app = FastAPI(title="Consent Companion", version="1.0.0")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# In-memory doc registry (maps doc_id → summary dict)
+DOC_REGISTRY: dict[str, dict] = {}
 
 
 @app.on_event("startup")
@@ -46,17 +57,7 @@ async def preload_demo_doc():
             },
             "risk_flags": [],
         }
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# In-memory doc registry (maps doc_id → summary dict)
-# For a hackathon this is fine; replace with Redis/DB for production
-DOC_REGISTRY: dict[str, dict] = {}
+        log.info("Demo doc preloaded: %s", demo_id)
 
 
 # ---------------------------------------------------------------------------
@@ -290,8 +291,6 @@ async def chat(request: Request):
 # Config endpoint — frontend fetches the Vapi phone number from here
 # ---------------------------------------------------------------------------
 
-from config import PUBLIC_URL
-
 @app.get("/config")
 async def get_config():
     """Returns public config the frontend needs (phone number, Vapi keys, etc.)."""
@@ -312,7 +311,6 @@ async def get_config():
 # ---------------------------------------------------------------------------
 # Serve frontend (optional — if you want single-process deployment)
 # ---------------------------------------------------------------------------
-import os
 
 frontend_path = os.path.join(os.path.dirname(__file__), "..", "frontend")
 if os.path.isdir(frontend_path):
