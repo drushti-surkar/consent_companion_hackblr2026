@@ -168,6 +168,75 @@
       opacity: 0.3;
     }
 
+    /* ─── PROBLEM BANNER ─── */
+    .problem-banner {
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+      position: relative;
+    }
+    .problem-banner-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    .problem-left {
+      padding: 80px 40px;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+    .problem-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--red);
+    }
+    .problem-headline {
+      font-size: clamp(32px, 4.5vw, 60px);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -1.5px;
+      text-transform: uppercase;
+    }
+    .problem-headline em {
+      font-style: normal;
+      color: var(--red);
+    }
+    .problem-body {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.8;
+      max-width: 420px;
+    }
+    .problem-right {
+      display: flex;
+      flex-direction: column;
+    }
+    .problem-stat {
+      flex: 1;
+      padding: 40px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .problem-stat:last-child { border-bottom: none; }
+    .problem-stat-num {
+      font-size: clamp(40px, 5vw, 72px);
+      font-weight: 700;
+      letter-spacing: -2px;
+      line-height: 1;
+      color: var(--red);
+      font-family: 'Space Mono', monospace;
+    }
+    .problem-stat-text {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 260px;
+    }
+
     /* ─── UPLOAD SECTION ─── */
     #upload-section {
       display: grid;
@@ -491,11 +560,13 @@
     }
 
     @media (max-width: 768px) {
-      .hero, #upload-section, .voice-block { grid-template-columns: 1fr; }
-      .hero-left, .section-left, .voice-left { border-right: none; border-bottom: 1px solid var(--border); }
+      .hero, #upload-section, .voice-block, .problem-banner-inner { grid-template-columns: 1fr; }
+      .hero-left, .section-left, .voice-left, .problem-left { border-right: none; border-bottom: 1px solid var(--border); }
       nav { padding: 16px 20px; }
       .nav-links { display: none; }
-      .hero-left, .section-left, .section-right, .voice-left, .voice-right { padding: 40px 20px; }
+      .nav-tag { display: none; }
+      .hero-left, .section-left, .section-right, .voice-left, .voice-right, .problem-left { padding: 40px 20px; }
+      .problem-stat { padding: 24px 20px; }
       .clause-row, .risk-row, .analysis-header, .doc-bar { padding-left: 20px; padding-right: 20px; }
     }
   </style>
@@ -511,7 +582,7 @@
     <a href="#">Ask</a>
     <a href="#">About</a>
   </div>
-  <div class="nav-tag">HackBlr 2026 · PS3</div>
+  <div class="nav-tag">by Drushti Surkar · HackBlr 2026 · PS3</div>
 </nav>
 
 <!-- HERO -->
@@ -580,6 +651,41 @@
           <div class="stat-number">0.25s</div>
           <div class="stat-label">Time to first spoken answer via semantic vector retrieval</div>
         </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM STATEMENT -->
+<section class="problem-banner">
+  <div class="problem-banner-inner">
+    <div class="problem-left">
+      <div class="problem-label">The Problem</div>
+      <h2 class="problem-headline">
+        You Sign.<br>
+        But Do You<br>
+        <em>Understand</em><br>
+        What You Signed?
+      </h2>
+      <p class="problem-body">
+        Legal documents — terms of service, loan agreements, hospital consent forms, rental contracts — are written to protect companies, not people. The average ToS is written at a postgraduate reading level. Most people click "I Agree" and move on. Consent Companion changes that.
+      </p>
+      <p class="problem-body" style="margin-top:-16px">
+        Upload any legal PDF. Ask a question by voice — in English, Hindi, Kannada, or Tamil. Get a plain-language answer in under a second. No lawyer. No literacy barrier.
+      </p>
+    </div>
+    <div class="problem-right">
+      <div class="problem-stat">
+        <div class="problem-stat-num">91%</div>
+        <div class="problem-stat-text">of people never read terms of service before agreeing</div>
+      </div>
+      <div class="problem-stat">
+        <div class="problem-stat-num">3000+</div>
+        <div class="problem-stat-text">words in the average app's terms of service — longer than the Indian Constitution's Preamble</div>
+      </div>
+      <div class="problem-stat">
+        <div class="problem-stat-num">0</div>
+        <div class="problem-stat-text">accessible, voice-first tools exist to help non-English speakers understand what they are consenting to</div>
       </div>
     </div>
   </div>
@@ -699,7 +805,7 @@
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-left">Consent Companion · HackBlr 2026 · PS3 — Voice AI for Accessibility</div>
+  <div class="footer-left">Consent Companion · Built by Drushti Surkar · HackBlr 2026 · PS3</div>
   <div class="footer-right">
     <span>Vapi</span>
     <span>Qdrant</span>
