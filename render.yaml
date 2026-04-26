@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: consent-companion
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free          # upgrade to starter ($7/mo) to avoid cold starts
+    healthCheckPath: /health
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false          # set manually in Render dashboard
+      - key: QDRANT_URL
+        sync: false
+      - key: QDRANT_API_KEY
+        sync: false
+      - key: QDRANT_COLLECTION
+        value: consent_clauses
+      - key: VAPI_API_KEY
+        sync: false
+      - key: VAPI_PUBLIC_KEY
+        sync: false
+      - key: VAPI_ASSISTANT_ID
+        sync: false
+      - key: VAPI_PHONE_NUMBER
+        sync: false
+      - key: DEMO_DOC_ID
+        sync: false
+      - key: DEMO_DOC_NAME
+        sync: false
+      - key: PUBLIC_URL
+        sync: false          # set to https://<your-render-url>.onrender.com
